@@ -11,13 +11,19 @@ var DateTimePickerDays = onClickOutside( createClass({
 		var footer = this.renderFooter(),
 			date = this.props.viewDate,
 			locale = date.localeData(),
+			today = moment(new Date()),
 			tableChildren
 			;
 
+		var propsPrevHeader =  { key: 'p', className: 'rdtPrev rdtOld' };
+		if (!(today.month() >= date.month() && today.year() >= date.year())) {
+			propsPrevHeader['onClick'] = this.props.subtractTime( 1, 'months' );
+			propsPrevHeader.className = 'rdtPrev';
+		}
 		tableChildren = [
 			React.createElement('thead', { key: 'th' }, [
 				React.createElement('tr', { key: 'h' }, [
-					React.createElement('th', { key: 'p', className: 'rdtPrev', onClick: this.props.subtractTime( 1, 'months' )}, React.createElement('span', {}, '‹' )),
+					React.createElement('th', propsPrevHeader, React.createElement('span', {}, '‹' )),
 					React.createElement('th', { key: 's', className: 'rdtSwitch', onClick: this.props.showView( 'months' ), colSpan: 5, 'data-value': this.props.viewDate.month() }, locale.months( date ) + ' ' + date.year() ),
 					React.createElement('th', { key: 'n', className: 'rdtNext', onClick: this.props.addTime( 1, 'months' )}, React.createElement('span', {}, '›' ))
 				]),

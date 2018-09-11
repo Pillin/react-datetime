@@ -2,16 +2,24 @@
 
 var React = require('react'),
 	createClass = require('create-react-class'),
-	onClickOutside = require('react-onclickoutside').default
+	onClickOutside = require('react-onclickoutside').default,
+	moment = require('moment')
 	;
 
 var DateTimePickerYears = onClickOutside( createClass({
 	render: function() {
 		var year = parseInt( this.props.viewDate.year() / 10, 10 ) * 10;
+		var currentYear = moment(new Date()).year();
+		var propsPrevHeader =  { key: 'prev', className: 'rdtPrev rdtOld'};
+
+		if (!(year < currentYear  &&  (year+9) > currentYear)) {
+			propsPrevHeader['onClick'] = this.props.subtractTime( 10, 'years' );
+			propsPrevHeader.className = 'rdtPrev';
+		}
 
 		return React.createElement('div', { className: 'rdtYears' }, [
 			React.createElement('table', { key: 'a' }, React.createElement('thead', {}, React.createElement('tr', {}, [
-				React.createElement('th', { key: 'prev', className: 'rdtPrev', onClick: this.props.subtractTime( 10, 'years' )}, React.createElement('span', {}, '‹' )),
+				React.createElement('th', propsPrevHeader, React.createElement('span', {}, '‹' )),
 				React.createElement('th', { key: 'year', className: 'rdtSwitch', onClick: this.props.showView( 'years' ), colSpan: 2 }, year + '-' + ( year + 9 ) ),
 				React.createElement('th', { key: 'next', className: 'rdtNext', onClick: this.props.addTime( 10, 'years' )}, React.createElement('span', {}, '›' ))
 			]))),
